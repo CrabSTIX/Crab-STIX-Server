@@ -1,80 +1,80 @@
 #!/usr/bin/python
-#_________              ___.     ____________________._______  ___
-#\_   ___ \____________ \_ |__  /   _____/\__    ___/|   \   \/  /
-#/    \  \/\_  __ \__  \ | __ \ \_____  \   |    |   |   |\     / 
-#\     \____|  | \// __ \| \_\ \/        \  |    |   |   |/     \ 
-# \______  /|__|  (____  /___  /_______  /  |____|   |___/___/\  \
+# _________              ___.     ____________________._______  ___
+# \_   ___ \____________ \_ |__  /   _____/\__    ___/|   \   \/  /
+# /    \  \/\_  __ \__  \ | __ \ \_____  \   |    |   |   |\     /
+# \     \____|  | \// __ \| \_\ \/        \  |    |   |   |/     \
+#  \______  /|__|  (____  /___  /_______  /  |____|   |___/___/\  \
 #        \/            \/    \/        \/                      \_/
-# Name	 :	config.py
-# Function :	Config reader
-# Called By:	server.py
+# Name     :    config.py
+# Function :    Config reader
+# Called By:    server.py
 
 from ConfigParser import SafeConfigParser
 
+
 class Reader():
 
-	"""
-	Wrapper for SafeConfigParser. Converts config file into a dict
-	"""
-	__single = None
+    """
+    Wrapper for SafeConfigParser. Converts config file into a dict
+    """
+    __single = None
 
-	def __init__(self):
+    def __init__(self):
 
-		self._parser = SafeConfigParser()
-		self._parser.optionxform = str
-		self._config = ""
+        self._parser = SafeConfigParser()
+        self._parser.optionxform = str
+        self._config = ""
 
-	@classmethod
-	def get_instance(cls):
+    @classmethod
+    def get_instance(cls):
 
-		# One first run runs __init__
-		# Subsequent requests just return an instance
+        # One first run runs __init__
+        # Subsequent requests just return an instance
 
-		if not cls.__single:
+        if not cls.__single:
 
-			cls.__single = Reader()
+            cls.__single = Reader()
 
-		return cls.__single
+        return cls.__single
 
-	def get_config(self, arugment_config_file):
-		"""
-		Identifies suricata log messages.
+    def get_config(self, arugment_config_file):
+        """
+        Identifies suricata log messages.
 
-		:param argument_config_file: The path to the crabstix.conf file
-		:return: dictionary of configuration variables
-			
-		"""
+        :param argument_config_file: The path to the crabstix.conf file
+        :return: dictionary of configuration variables
+        """
 
-		# Read first time
-		if self._config == "":
+        # Read first time
+        if self._config == "":
 
-			self._config = {}
-			
-			#Read in the config file
-			self._parser.read(arugment_config_file)
+            self._config = {}
 
-			#Split it into sections
-			sections = self._parser.sections()
+            # Read in the config file
+            self._parser.read(arugment_config_file)
 
-			#Read by section
-			for section in sections:
+            # Split it into sections
+            sections = self._parser.sections()
 
-				#Temp dict
-				option_dict = {}
+            # Read by section
+            for section in sections:
 
-				#Read all the options for this section
-				options = self._parser.options(section)
+                # Temp dict
+                option_dict = {}
 
-				#For each option get the value
-				for option in options:
+                # Read all the options for this section
+                options = self._parser.options(section)
 
-					option_dict[option] = self._parser.get(section, option)
+                # For each option get the value
+                for option in options:
 
-				#Add it to the global config object
-				self._config[section] = option_dict
+                    option_dict[option] = self._parser.get(section, option)
 
-			return self._config
+                # Add it to the global config object
+                self._config[section] = option_dict
 
-		else:
+            return self._config
 
-			return self._config
+        else:
+
+            return self._config
